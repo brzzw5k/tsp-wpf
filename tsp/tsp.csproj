@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="H.Pipes" Version="2.0.42" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\tsp-shared\tsp-shared.csproj" />
+  </ItemGroup>
+
+</Project>

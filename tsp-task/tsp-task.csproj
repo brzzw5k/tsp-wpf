@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <RootNamespace>tsp_task</RootNamespace>
+    <BaseOutputPath>bin\</BaseOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="H.Pipes" Version="2.0.42" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\tsp\tsp.csproj" />
+  </ItemGroup>
+
+</Project>
