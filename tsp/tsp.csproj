@@ -10,8 +10,4 @@
     <PackageReference Include="H.Pipes" Version="2.0.42" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\tsp-shared\tsp-shared.csproj" />
-  </ItemGroup>
-
 </Project>
