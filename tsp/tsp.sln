@@ -5,6 +5,8 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tsp", "tsp.csproj", "{59613096-B853-41B9-9F2A-D68C7D9B9766}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "tsp-shared", "..\tsp-shared\tsp-shared.shproj", "{1CDBAEA5-14C4-4D1A-A716-96EB4B5693AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,5 +23,9 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5FFD7920-E440-4647-B9BE-B9923E6BC784}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\tsp-shared\tsp-shared.projitems*{1cdbaea5-14c4-4d1a-a716-96eb4b5693af}*SharedItemsImports = 13
+		..\tsp-shared\tsp-shared.projitems*{59613096-b853-41b9-9f2a-d68c7d9b9766}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

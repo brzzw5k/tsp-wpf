@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>1cdbaea5-14c4-4d1a-a716-96eb4b5693af</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>tsp_shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Cycle.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Node.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Reader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Vector2Extension.cs" />
+  </ItemGroup>
+</Project>

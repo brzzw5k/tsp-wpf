@@ -21,6 +21,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using tsp_shared;
 
 namespace tsp
 {
@@ -29,10 +30,7 @@ namespace tsp
     /// </summary>
     public partial class MainWindow : Window
     {
-        private double minX;
-        private double minY;
-        private double maxX;
-        private double maxY;
+        private Cycle Cycle;
         private ComputeMethod ComputeMethod = ComputeMethod.TASK;
         public MainWindow()
         {
@@ -41,7 +39,6 @@ namespace tsp
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-
             StartButton.IsEnabled = false;
             StopButton.IsEnabled = true;
         }
@@ -58,7 +55,9 @@ namespace tsp
 
             if(dialog.ShowDialog() == true)
             {
-                SelectedFile.Text = dialog.FileName;
+                var path = dialog.FileName;
+                Cycle = new Cycle(path);
+                DrawCycle();
             }
         }
 
@@ -70,6 +69,45 @@ namespace tsp
         private void ThreadRadio_Click(object sender, RoutedEventArgs e)
         {
             ComputeMethod = ComputeMethod.THREAD;
+        }
+
+        private void DrawCycle()
+        {
+            CycleCanvas.Children.Clear();
+            var nodes = Cycle.GetNormalizedNodes((float)CycleCanvas.ActualWidth, (float)CycleCanvas.ActualHeight);
+
+            for (int i = 0; i < nodes.Count - 1; i++)
+            {
+                DrawLine(nodes[i], nodes[i + 1]);
+            }
+            DrawLine(nodes[^1], nodes[0]);
+
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                DrawNode(nodes[i]);
+            }
+        }
+
+        private void DrawLine(Node node1, Node node2)
+        {
+            var line = new Line();
+            line.Stroke = Brushes.Black;
+            line.StrokeThickness = 2;
+            line.X1 = node1.Position.X;
+            line.Y1 = node1.Position.Y;
+            line.X2 = node2.Position.X;
+            line.Y2 = node2.Position.Y;
+            CycleCanvas.Children.Add(line);
+        }
+
+        private void DrawNode(Node node)
+        {
+            var ellipse = new Ellipse();
+            ellipse.Fill = Brushes.Red;
+            ellipse.Width = 10;
+            ellipse.Height = 10;
+            ellipse.Margin = new Thickness(node.Position.X - 5, node.Position.Y - 5, 0, 0);
+            CycleCanvas.Children.Add(ellipse);
         }
     }
 
