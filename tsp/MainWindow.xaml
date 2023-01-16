@@ -35,7 +35,7 @@
             <TextBlock Text="Best Solution" Style="{StaticResource MarginTextBlock}"/>
             <TextBox Width="50" Text="0" Style="{StaticResource MarginControl}"/>
             <TextBlock Text="Maximum Duration" Style="{StaticResource MarginTextBlock}"/>
-            <TextBox Width="50" Text="30" Style="{StaticResource MarginControl}"/>
+            <TextBox Name="TimeoutTextBox" Width="50" Text="30" Style="{StaticResource MarginControl}"/>
             <Button Name="StartButton" Content="Start" Click="StartButton_Click" Style="{StaticResource MarginControl}"/>
             <Button Name="StopButton" Content="Stop" Click="StopButton_Click" Style="{StaticResource MarginControl}"/>
             <RadioButton Content="Task" GroupName="TaskThread" IsChecked="True" Style="{StaticResource MarginControl}" Click="TaskRadio_Click"/>

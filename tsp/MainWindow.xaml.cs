@@ -1,26 +1,15 @@
-﻿using H.Pipes;
+﻿using H.Formatters;
+using H.Pipes;
 using H.Pipes.Args;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.IO.Pipes;
-using System.Linq;
-using System.Numerics;
-using System.Reflection.PortableExecutable;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using tsp_shared;
 
 namespace tsp
@@ -30,21 +19,83 @@ namespace tsp
     /// </summary>
     public partial class MainWindow : Window
     {
+        private PipeServer<PipeMessage> PipeServer;
         private Cycle Cycle;
         private ComputeMethod ComputeMethod = ComputeMethod.TASK;
+
+        private string TASK_CLIENT_EXE_PATH = "C:\\Users\\jbrzozowski\\PG\\tsp-wpf\\tsp-task\\bin\\Debug\\net6.0\\tsp-task.exe";
+        private string THREAD_CLIENT_EXE_PATH = "C:\\Users\\jbrzozowski\\PG\\tsp-wpf\\tsp-thread\\bin\\Debug\\net6.0\\tsp-thread.exe";
         public MainWindow()
         {
             InitializeComponent();
+            Task.Run(async () => await StartServerAsync());
         }
 
+        private async Task StartServerAsync()
+        {
+            var formatter = new BinaryFormatter();
+            formatter.InternalFormatter.Binder = new CustomizedBinder();
+            await using var server = new PipeServer<PipeMessage>(Client.PipeName, formatter: formatter);
+            
+            server.ClientConnected += async (o, args) =>
+            {
+                Console.WriteLine($"Client {args.Connection.PipeName} is now connected!");
+
+                await args.Connection.WriteAsync(new PipeMessage { Cycle = Cycle, PipeMessageType = PipeMessageType.START});
+            };
+            server.ClientDisconnected += (o, args) =>
+            {
+                Console.WriteLine($"Client {args.Connection.PipeName} disconnected");
+            };
+            server.MessageReceived += (sender, args) =>
+            {
+                Console.WriteLine($"Client {args.Connection.PipeName} says: {args.Message}");
+            };
+            
+            server.ExceptionOccurred += (o, args) => OnExceptionOccurred(args.Exception);
+
+            await server.StartAsync();
+
+            await Task.Delay(Timeout.InfiniteTimeSpan);
+        }
+
+        private void OnExceptionOccurred(Exception exception)
+        {
+            throw new NotImplementedException();
+        }
+        
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
             StartButton.IsEnabled = false;
             StopButton.IsEnabled = true;
+
+            if (ComputeMethod == ComputeMethod.TASK)
+            {
+                Process.Start(TASK_CLIENT_EXE_PATH);
+            }
+            else if (ComputeMethod == ComputeMethod.THREAD)
+            {
+                Process.Start(THREAD_CLIENT_EXE_PATH);
+            }
+
+            Task.Run(async () => await StopAfterTimeoutAsync());
+
+        }
+
+        private async Task StopAfterTimeoutAsync()
+        {
+            var ms = int.Parse(TimeoutTextBox.Text);
+            await Task.Delay(ms * 1000);
+            _ = Application.Current.Dispatcher.Invoke(() => PipeServer.WriteAsync(new PipeMessage { Cycle = Cycle, PipeMessageType = PipeMessageType.STOP }));
+
+            StartButton.IsEnabled = true;
+            StopButton.IsEnabled = false;
         }
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
+            Application.Current.Dispatcher.Invoke(() => PipeServer.WriteAsync(new PipeMessage { Cycle = Cycle, PipeMessageType = PipeMessageType.STOP }));
+
             StartButton.IsEnabled = true;
             StopButton.IsEnabled = false;
         }
@@ -57,7 +108,7 @@ namespace tsp
             {
                 var path = dialog.FileName;
                 Cycle = new Cycle(path);
-                DrawCycle();
+                Application.Current.Dispatcher.Invoke(() => DrawCycle());
             }
         }
 

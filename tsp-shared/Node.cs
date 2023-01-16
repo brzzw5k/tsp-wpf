@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Text;
 
 namespace tsp_shared
 {
+    [Serializable]
     public class Node
     {
         public int Number { get; set; }
