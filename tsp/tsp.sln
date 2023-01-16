@@ -5,9 +5,9 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tsp", "tsp.csproj", "{59613096-B853-41B9-9F2A-D68C7D9B9766}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "tsp-shared", "..\tsp-shared\tsp-shared.shproj", "{1CDBAEA5-14C4-4D1A-A716-96EB4B5693AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tsp-task", "..\tsp-task\tsp-task.csproj", "{7FDE1983-BB5B-47E4-82B6-6D9E966BA543}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tsp-task", "..\tsp-task\tsp-task.csproj", "{7FDE1983-BB5B-47E4-82B6-6D9E966BA543}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tsp-shared", "..\tsp-shared\tsp-shared.csproj", "{B9FBFCAB-743D-4071-AD54-EE194163DD56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,16 +23,15 @@ Global
 		{7FDE1983-BB5B-47E4-82B6-6D9E966BA543}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FDE1983-BB5B-47E4-82B6-6D9E966BA543}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FDE1983-BB5B-47E4-82B6-6D9E966BA543}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9FBFCAB-743D-4071-AD54-EE194163DD56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9FBFCAB-743D-4071-AD54-EE194163DD56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9FBFCAB-743D-4071-AD54-EE194163DD56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9FBFCAB-743D-4071-AD54-EE194163DD56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5FFD7920-E440-4647-B9BE-B9923E6BC784}
-	EndGlobalSection
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		..\tsp-shared\tsp-shared.projitems*{1cdbaea5-14c4-4d1a-a716-96eb4b5693af}*SharedItemsImports = 13
-		..\tsp-shared\tsp-shared.projitems*{59613096-b853-41b9-9f2a-d68c7d9b9766}*SharedItemsImports = 5
-		..\tsp-shared\tsp-shared.projitems*{7fde1983-bb5b-47e4-82b6-6d9e966ba543}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

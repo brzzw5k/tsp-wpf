@@ -1,19 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>tsp_task</RootNamespace>
+    <RootNamespace>tsp_shared</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="H.Pipes" Version="2.0.44" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\tsp-shared\tsp-shared.csproj" />
   </ItemGroup>
 
 </Project>

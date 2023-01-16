@@ -7,9 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="H.Pipes" Version="2.0.42" />
+    <PackageReference Include="H.Pipes" Version="2.0.44" />
   </ItemGroup>
 
-  <Import Project="..\tsp-shared\tsp-shared.projitems" Label="Shared" />
-
+  <ItemGroup>
+    <ProjectReference Include="..\tsp-shared\tsp-shared.csproj" />
+  </ItemGroup>
+	
 </Project>

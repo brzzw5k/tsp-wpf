@@ -1,5 +1,4 @@
-﻿using H.Formatters;
-using H.Pipes;
+﻿using H.Pipes;
 using H.Pipes.Args;
 using Microsoft.Win32;
 using System;
@@ -33,10 +32,8 @@ namespace tsp
 
         private async Task StartServerAsync()
         {
-            var formatter = new BinaryFormatter();
-            formatter.InternalFormatter.Binder = new CustomizedBinder();
-            await using var server = new PipeServer<PipeMessage>(Client.PipeName, formatter: formatter);
-            
+            await using var server = new PipeServer<PipeMessage>(Client.PipeName);
+            PipeServer = server;
             server.ClientConnected += async (o, args) =>
             {
                 Console.WriteLine($"Client {args.Connection.PipeName} is now connected!");
@@ -78,15 +75,15 @@ namespace tsp
                 Process.Start(THREAD_CLIENT_EXE_PATH);
             }
 
-            Task.Run(async () => await StopAfterTimeoutAsync());
+            _ = StopAfterTimeoutAsync();
 
         }
 
         private async Task StopAfterTimeoutAsync()
         {
-            var ms = int.Parse(TimeoutTextBox.Text);
+            var ms = TimeoutTextBox.Text == "" ? 0 : int.Parse(TimeoutTextBox.Text);
             await Task.Delay(ms * 1000);
-            _ = Application.Current.Dispatcher.Invoke(() => PipeServer.WriteAsync(new PipeMessage { Cycle = Cycle, PipeMessageType = PipeMessageType.STOP }));
+            _ = Application.Current.Dispatcher.Invoke(async () => await PipeServer.WriteAsync(new PipeMessage { PipeMessageType = PipeMessageType.STOP }));
 
             StartButton.IsEnabled = true;
             StopButton.IsEnabled = false;
@@ -94,7 +91,7 @@ namespace tsp
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(() => PipeServer.WriteAsync(new PipeMessage { Cycle = Cycle, PipeMessageType = PipeMessageType.STOP }));
+            _ = Application.Current.Dispatcher.Invoke(async () => await PipeServer.WriteAsync(new PipeMessage { PipeMessageType = PipeMessageType.STOP }));
 
             StartButton.IsEnabled = true;
             StopButton.IsEnabled = false;

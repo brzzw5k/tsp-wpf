@@ -1,3 +1,6 @@
 tsp-task/bin/
 tsp-task/obj/project.assets.json
 tsp-task/obj/
+tsp-shared/obj/Debug/net6.0/tsp-shared.pdb
+tsp-shared/obj/
+tsp-shared/bin/
