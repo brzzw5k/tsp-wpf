@@ -4,3 +4,5 @@ tsp-task/obj/
 tsp-shared/obj/Debug/net6.0/tsp-shared.pdb
 tsp-shared/obj/
 tsp-shared/bin/
+tsp-thread/bin/
+tsp-thread/obj/

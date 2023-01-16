@@ -37,18 +37,14 @@ namespace tsp
             server.ClientConnected += async (o, args) =>
             {
                 Console.WriteLine($"Client {args.Connection.PipeName} is now connected!");
-
-                await args.Connection.WriteAsync(new PipeMessage { Cycle = Cycle, PipeMessageType = PipeMessageType.START});
+                await Application.Current.Dispatcher.Invoke(() => args.Connection.WriteAsync(new PipeMessage { Cycle = Cycle, Value = int.Parse(ConcurrencyTextBox.Text), PipeMessageType = PipeMessageType.START }));
             };
             server.ClientDisconnected += (o, args) =>
             {
                 Console.WriteLine($"Client {args.Connection.PipeName} disconnected");
             };
-            server.MessageReceived += (sender, args) =>
-            {
-                Console.WriteLine($"Client {args.Connection.PipeName} says: {args.Message}");
-            };
-            
+            server.MessageReceived += (sender, args) => OnMessageReceived(sender, args);
+
             server.ExceptionOccurred += (o, args) => OnExceptionOccurred(args.Exception);
 
             await server.StartAsync();
@@ -56,15 +52,50 @@ namespace tsp
             await Task.Delay(Timeout.InfiniteTimeSpan);
         }
 
+        private void OnMessageReceived(object sender, ConnectionMessageEventArgs<PipeMessage> args)
+        {
+            if (args.Message.PipeMessageType == PipeMessageType.PROGRESS)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    ProgressBar.Value = args.Message.Value;
+                });
+            }
+            else if (args.Message.PipeMessageType == PipeMessageType.NEW_BEST)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    var currentCycleLength = Cycle.GetLength();
+                    var newCycleLength = args.Message.Cycle.GetLength();
+                    if (currentCycleLength > newCycleLength)
+                    {
+                        Cycle = args.Message.Cycle;
+                        BestSolutionTextBox.Text = newCycleLength.ToString();
+                        Log.Items.Add($"Solution: {newCycleLength} by {ComputeMethod.GetName(ComputeMethod)} {args.Message.ID}");
+                        Application.Current.Dispatcher.Invoke(() => DrawCycle());
+                    }
+                });
+            }
+            else if (args.Message.PipeMessageType == PipeMessageType.FINISH)
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    ProgressBar.Value = 0;
+                    Application.Current.Dispatcher.Invoke(() => DrawCycle());
+                });
+            }
+        }
+
         private void OnExceptionOccurred(Exception exception)
         {
             throw new NotImplementedException();
         }
-        
+
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
             StartButton.IsEnabled = false;
             StopButton.IsEnabled = true;
+            ExitButton.IsEnabled = false;
 
             if (ComputeMethod == ComputeMethod.TASK)
             {
@@ -87,6 +118,7 @@ namespace tsp
 
             StartButton.IsEnabled = true;
             StopButton.IsEnabled = false;
+            ExitButton.IsEnabled = true;
         }
 
         private void StopButton_Click(object sender, RoutedEventArgs e)
@@ -95,16 +127,26 @@ namespace tsp
 
             StartButton.IsEnabled = true;
             StopButton.IsEnabled = false;
+            ExitButton.IsEnabled = true;
+
+        }
+
+        private void ExitButton_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
 
         private void SelectFileButton_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFileDialog();
 
-            if(dialog.ShowDialog() == true)
+            if (dialog.ShowDialog() == true)
             {
                 var path = dialog.FileName;
                 Cycle = new Cycle(path);
+                Cycle = Cycle.ShuffledCopy();
+                BestSolutionTextBox.Text = Cycle.GetLength().ToString();
+                Log.Items.Clear();
                 Application.Current.Dispatcher.Invoke(() => DrawCycle());
             }
         }
@@ -156,6 +198,14 @@ namespace tsp
             ellipse.Height = 10;
             ellipse.Margin = new Thickness(node.Position.X - 5, node.Position.Y - 5, 0, 0);
             CycleCanvas.Children.Add(ellipse);
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (Cycle != null)
+            {
+                Application.Current.Dispatcher.Invoke(() => DrawCycle());
+            }
         }
     }
 

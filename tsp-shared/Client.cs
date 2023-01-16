@@ -42,5 +42,10 @@ namespace tsp_shared
             Console.WriteLine(exception.Message);
         }
 
+        public async Task SendAsync(PipeMessage message)
+        {
+            await PipeClient.WriteAsync(message);
+        }
+
     }
 }

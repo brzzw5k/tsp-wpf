@@ -1,11 +1,12 @@
 ﻿using tsp_shared;
 
-namespace tsp_task
+namespace tsp_thread
 {
     class Program
     {
         static bool isRunning = true;
         static Client Client;
+        static List<Thread> Threads;
         static CancellationTokenSource CancellationSource = new CancellationTokenSource();
         private static object cycleLock = new();
         private static object progressLock = new();
@@ -17,6 +18,7 @@ namespace tsp_task
         static void Main(string[] args)
         {
             Client = new Client(Client.PipeName);
+            Threads = new List<Thread>();
             Client.onMessageReceived += OnMessageReceived;
             while (isRunning) { }
         }
@@ -27,26 +29,22 @@ namespace tsp_task
             {
                 CancellationSource.Cancel();
                 Console.WriteLine("Cancelled");
+                foreach (var thread in Threads)
+                {
+                    thread.Interrupt();
+                }
                 isRunning = false;
             }
             else if (message.PipeMessageType == PipeMessageType.START)
             {
-
-                try
+                best = message.Cycle;
+                concurrencyCount = message.Value;
+                for (int i = 0; i < concurrencyCount; i++)
                 {
-                    best = message.Cycle;
-                    concurrencyCount = message.Value;
-                    for (int i = 0; i < concurrencyCount; i++)
-                    {
-                        Task.Run(() => Work(Client, message.Cycle, i, CancellationSource.Token));
-                    }
+                    Thread thread = new Thread(() => Work(Client, message.Cycle, i, CancellationSource.Token));
+                    thread.Start();
+                    Threads.Add(thread);
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Cancelled");
-                    isRunning = false;
-                }
-
             }
         }
 
@@ -69,11 +67,6 @@ namespace tsp_task
 
                 for (int j = 0; j < ITERATIONS_2; j++)
                 {
-
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        cancellationToken.ThrowIfCancellationRequested();
-                    }
                     var cycleAThreeOpted = Transformations.ThreeOPT(cycleAMutated);
                     var cycleBThreeOpted = Transformations.ThreeOPT(cycleBMutated);
                     var localBest = cycleAThreeOpted.GetLength() < cycleBThreeOpted.GetLength() ? cycleAThreeOpted : cycleBThreeOpted;

@@ -1,7 +1,8 @@
 ﻿<Window x:Class="tsp.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="800" Width="1200">
+        Title="MainWindow" Height="800" Width="1200"
+        SizeChanged="Window_SizeChanged">
     <Window.Resources>
         <Style TargetType="Control" x:Key="MarginControl">
             <Setter Property="Margin" Value="5"/>
@@ -23,23 +24,23 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <Canvas Name="CycleCanvas" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="30"/>
+        <Canvas Name="CycleCanvas" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="20,20,240,20"/>
         <ProgressBar Name="ProgressBar" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" />
-        <ListBox Grid.Row="0" Grid.RowSpan="2" Grid.Column="1">
-            
-        </ListBox>
+        <ListView Name="Log" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Width="220">
+        </ListView>
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
             <Button Name="SelectFileButton" Content="Select File" Style="{StaticResource MarginControl}" Click="SelectFileButton_Click"/>
             <TextBlock Text="Concurrency" Style="{StaticResource MarginTextBlock}"/>
-            <TextBox Width="50" Text="5" Style="{StaticResource MarginControl}"/>
+            <TextBox Name="ConcurrencyTextBox" Width="50" Text="1" Style="{StaticResource MarginControl}"/>
             <TextBlock Text="Best Solution" Style="{StaticResource MarginTextBlock}"/>
-            <TextBox Width="50" Text="0" Style="{StaticResource MarginControl}"/>
+            <TextBox Name="BestSolutionTextBox" Width="100" Text="0" Style="{StaticResource MarginControl}"/>
             <TextBlock Text="Maximum Duration" Style="{StaticResource MarginTextBlock}"/>
             <TextBox Name="TimeoutTextBox" Width="50" Text="30" Style="{StaticResource MarginControl}"/>
             <Button Name="StartButton" Content="Start" Click="StartButton_Click" Style="{StaticResource MarginControl}"/>
             <Button Name="StopButton" Content="Stop" Click="StopButton_Click" Style="{StaticResource MarginControl}"/>
             <RadioButton Content="Task" GroupName="TaskThread" IsChecked="True" Style="{StaticResource MarginControl}" Click="TaskRadio_Click"/>
             <RadioButton Content="Thread" GroupName="TaskThread" Style="{StaticResource MarginControl}" Click="ThreadRadio_Click"/>
+            <Button Name="ExitButton" Content="Exit" Click="ExitButton_Click" Style="{StaticResource MarginControl}"/>
         </StackPanel>
     </Grid>
 </Window>

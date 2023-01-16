@@ -65,5 +65,34 @@ namespace tsp_shared
 
             return normalizedNodes;
         }
+
+        internal void SetFirstEmptyNode(Node node)
+        {
+            for (int i = 0; i < Nodes.Count; i++)
+            {
+                if (Nodes[i].Number == -1)
+                {
+                    Nodes[i] = node;
+                    return;
+                }
+            }
+        }
+
+        public Cycle ShuffledCopy()
+        {
+            var random = new Random();
+            var shuffledNodes = Nodes.OrderBy(x => random.Next()).ToList();
+            return new Cycle(shuffledNodes);
+        }
+
+        public Cycle Copy()
+        {
+            return new Cycle(Nodes);
+        }
+
+        public override string ToString()
+        {
+            return string.Join(" ", Nodes.Select(x => x.Number));
+        }
     }
 }

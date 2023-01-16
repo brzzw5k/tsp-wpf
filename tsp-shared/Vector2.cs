@@ -19,5 +19,10 @@ namespace tsp_shared
         {
             return (float)Math.Sqrt(Math.Pow(X - other.X, 2) + Math.Pow(Y - other.Y, 2));
         }
+
+        public override string ToString()
+        {
+            return $"X: {X}, Y: {Y}";
+        }
     }
 }
